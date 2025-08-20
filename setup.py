@@ -21,5 +21,5 @@ setup(
     author='Kongkham Luangkhot',
     author_email='kongkham.luangkhot@gmail.com',
     packages=find_packages(),
-    requires=get_requirements()
+    install_requires=get_requirements()
 )
