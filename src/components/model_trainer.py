@@ -12,7 +12,6 @@ from sklearn.svm import SVR
 from sklearn.linear_model import LinearRegression, Ridge, Lasso
 from catboost import CatBoostRegressor
 from xgboost import XGBRegressor
-from sklearn.model_selection import RandomizedSearchCV
 from sklearn.metrics import r2_score
 
 from src.utils import save_object, evaluate_model
@@ -45,7 +44,55 @@ class ModelTrainer:
                 'XGBRegressor': XGBRegressor(eval_metric='rmse')
             }
 
-            model_reports: dict = evaluate_model(models, X_train, y_train, X_test, y_test)
+            params = {
+                'KNeighborsRegressor': {
+                    'algorithm': ['ball_tree', 'kd_tree', 'brute'],
+                    'n_neighbors': [3,5,7,9]
+                },
+                'DecisionTreeRegressor': {
+                    'criterion': ['squared_error', 'friedman_mse', 'absolute_error', 'poisson'],
+                },
+                'AdaBoostRegressor': {
+                    'loss': ['linear', 'square', 'exponential'],
+                    'n_estimators': [8,16,32,64,128,256],
+                    'learning_rate': [0.001, 0.01, 0.05, 0.1, 0.5]
+                },
+                'GradientBoostingRegressor': {
+                    'loss': ['squared_error', 'absolute_error', 'huber', 'quantile'],
+                    'learning_rate': [0.001, 0.01, 0.05, 0.1, 0.5],
+                    'n_estimators': [8,16,32,64,128,256],
+                    'subsample': [0.6,0.7,0.75,0.8,0.85,0.9],
+                    'criterion': ['friedman_mse', 'squared_error']
+                },
+                'RandomForestRegressor': {
+                    'criterion': ['squared_error', 'absolute_error', 'friedman_mse', 'poisson']
+                },
+                'SVR': {},
+                'LinearRegression': {},
+                'Ridge': {
+                    'alpha': [0.01, 0.1, 1, 10, 100],
+                    'solver': ['auto', 'svd', 'cholesky', 'lsqr', 'sparse_cg', 'sag', 'saga', 'lbfgs'],
+                    'max_iter': [1000, 5000, 10000],
+                    'tol': [1e-3, 1e-4, 1e-5]
+                },
+                'Lasso': {
+                    'alpha': [0.01, 0.1, 1, 10, 100],
+                    'max_iter': [1000, 5000, 10000],
+                    'tol': [1e-3, 1e-4, 1e-5],
+                    'selection': ['cyclic', 'random'] 
+                },
+                'CatBoostRegressor': {
+                    'iterations': [30,50,100],
+                    'learning_rate': [0.01, 0.05, 0.1],
+                    'depth': [6,8,10],
+                },
+                'XGBRegressor': {
+                    'learning_rate': [0.001, 0.01, 0.05, 0.1, 0.5],
+                    'n_estimators': [8,16,32,64,128,256],
+                }
+            }
+
+            model_reports: dict = evaluate_model(X_train, y_train, X_test, y_test, models, params)
             best_model_score = max(model_reports.values())
             best_model_name = list(model_reports.keys())[list(model_reports.values()).index(best_model_score)]
 

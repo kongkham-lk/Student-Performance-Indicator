@@ -7,6 +7,7 @@ from src.logger import logging
 import dill
 
 from sklearn.metrics import r2_score
+from sklearn.model_selection import RandomizedSearchCV
 
 def save_object(file_path: str, obj: object):
     try:
@@ -23,14 +24,20 @@ def load_object(file_path: str):
     except Exception as e:
         raise Exception(f"Error loading object: {e}")
 
-def evaluate_model(models, X_train, y_train, X_test, y_test):
+def evaluate_model(X_train, y_train, X_test, y_test, models, params):
     try:
         report = {}
 
         for i in range(len(models)):
             name = list(models.keys())[i]
-            model = list(models.values())[i]
+            model = models[name]
+            param = params[name]
+            # print("\n", "="*150, "\n", name, ":", param, "\n", "="*150, "\n")
             
+            rs = RandomizedSearchCV(model, param_distributions=param, cv=5, n_jobs=-1)
+            rs.fit(X_train, y_train)
+
+            model.set_params(**rs.best_params_)
             model.fit(X_train, y_train) # Train model
 
             # Make predictions
