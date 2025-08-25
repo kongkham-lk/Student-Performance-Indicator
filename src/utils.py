@@ -20,7 +20,8 @@ def save_object(file_path: str, obj: object):
 
 def load_object(file_path: str):
     try:
-        return dill.load(file_path)
+        with open(file_path, 'rb') as file:
+            return dill.load(file)
     except Exception as e:
         raise Exception(f"Error loading object: {e}")
 
