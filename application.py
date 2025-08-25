@@ -3,13 +3,13 @@ from flask import Flask, request, render_template
 from src.pipelines.prdict_pipeline import CustomData, PredictPipeline
 from src.exception import CustomException
 
-app = Flask(__name__)
+application = Flask(__name__)
 
-@app.route('/')
+@application.route('/')
 def index():
     return render_template('index.html')
 
-@app.route('/predict', methods=['GET','POST'])
+@application.route('/predict', methods=['GET','POST'])
 def predict():
     if request.method == 'POST':
         try:
@@ -35,4 +35,4 @@ def predict():
         return render_template('home.html')
     
 if __name__ == "__main__":
-    app.run(host='0.0.0.0')
+    application.run(host='0.0.0.0')
