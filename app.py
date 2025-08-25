@@ -3,8 +3,7 @@ from flask import Flask, request, render_template
 from src.pipelines.prdict_pipeline import CustomData, PredictPipeline
 from src.exception import CustomException
 
-application = Flask(__name__)
-app = application
+app = Flask(__name__)
 
 @app.route('/')
 def index():
