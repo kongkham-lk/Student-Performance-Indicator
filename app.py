@@ -4,6 +4,7 @@ from src.pipelines.predict_pipeline import CustomData, PredictPipeline
 from src.exception import CustomException
 
 app = Flask(__name__)
+application = app
 
 @app.route('/', methods=['GET','POST'])
 def predict():
@@ -31,4 +32,5 @@ def predict():
         return render_template('home.html')
     
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port='8080')
+    app.run(host='0.0.0.0')
+    # app.run(host='0.0.0.0', port='8080')
