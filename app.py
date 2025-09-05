@@ -1,6 +1,6 @@
 import sys
 from flask import Flask, request, render_template
-from src.pipelines.prdict_pipeline import CustomData, PredictPipeline
+from src.pipelines.predict_pipeline import CustomData, PredictPipeline
 from src.exception import CustomException
 
 app = Flask(__name__)
